@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beginner Robotics Curriculum | Future Engineers Robotics Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue:#1e40af; --sky:#0ea5e9; --purple:#7c3aed; --green:#059669;
+    --orange:#ea580c; --yellow:#d97706; --red:#dc2626; --pink:#db2777;
+    --bg:#f0f6ff; --card:#fff; --text:#1e293b; --muted:#64748b;
+    --border:#e2e8f0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);font-size:15px;}
+  
+  /* ── COVER PAGE ── */
+  .cover{
+    background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#0f172a 100%);
+    color:#fff;min-height:100vh;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;text-align:center;padding:48px 24px;
+    position:relative;overflow:hidden;
+  }
+  .cover::before{
+    content:'';position:absolute;inset:0;
+    background-image:radial-gradient(circle at 20% 50%, rgba(14,165,233,0.12) 0%, transparent 50%),
+                     radial-gradient(circle at 80% 20%, rgba(124,58,237,0.12) 0%, transparent 50%);
+  }
+  .cover-robot{font-size:6em;margin-bottom:16px;animation:float 3s ease-in-out infinite;}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  .cover-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(14,165,233,0.15);border:1px solid rgba(14,165,233,0.4);
+    color:#38bdf8;padding:6px 20px;border-radius:50px;font-size:0.82em;
+    font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;
+  }
+  .cover h1{
+    font-family:'Orbitron',sans-serif;font-size:clamp(2em,6vw,3.5em);
+    font-weight:900;line-height:1.1;margin-bottom:12px;
+    background:linear-gradient(135deg,#fff,#93c5fd,#c4b5fd);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .cover-sub{font-size:1.1em;color:#93c5fd;margin-bottom:36px;max-width:500px;}
+  .cover-meta{
+    display:flex;gap:32px;flex-wrap:wrap;justify-content:center;margin-bottom:40px;
+  }
+  .cover-meta-item{text-align:center;}
+  .cover-meta-item .num{
+    font-family:'Orbitron',sans-serif;font-size:2em;font-weight:900;
+    background:linear-gradient(135deg,#38bdf8,#a78bfa);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .cover-meta-item .lbl{font-size:0.78em;color:#7dd3fc;text-transform:uppercase;letter-spacing:1px;}
+  .cover-tags{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+  .tag{
+    background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+    color:#e2e8f0;padding:6px 14px;border-radius:50px;font-size:0.82em;font-weight:700;
+  }
+
+  /* ── LAYOUT ── */
+  .container{max-width:960px;margin:0 auto;padding:40px 20px;}
+  
+  /* ── SECTION HEADER ── */
+  .section-header{text-align:center;margin-bottom:36px;}
+  .section-header h2{font-family:'Orbitron',sans-serif;font-size:1.6em;color:var(--blue);margin-bottom:8px;}
+  .section-header p{color:var(--muted);font-size:0.95em;}
+
+  /* ── OVERVIEW CARDS ── */
+  .overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:48px;}
+  .ov-card{
+    background:var(--card);border-radius:16px;padding:22px 18px;text-align:center;
+    border:2px solid var(--border);transition:transform 0.2s,border-color 0.2s;
+  }
+  .ov-card:hover{transform:translateY(-4px);}
+  .ov-card .ov-icon{font-size:2.4em;margin-bottom:10px;}
+  .ov-card .ov-title{font-weight:800;font-size:0.95em;margin-bottom:4px;}
+  .ov-card .ov-val{color:var(--muted);font-size:0.85em;}
+
+  /* ── WEEK CARDS ── */
+  .week-nav{
+    display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:36px;
+    position:sticky;top:0;z-index:50;background:var(--bg);padding:12px 0;
+    border-bottom:2px solid var(--border);
+  }
+  .week-btn{
+    background:var(--card);border:2px solid var(--border);color:var(--muted);
+    padding:7px 16px;border-radius:50px;font-family:'Nunito',sans-serif;
+    font-weight:800;font-size:0.82em;cursor:pointer;transition:all 0.2s;
+  }
+  .week-btn:hover,.week-btn.active{
+    background:var(--blue);border-color:var(--blue);color:#fff;
+  }
+
+  .week-card{
+    background:var(--card);border-radius:20px;border:2px solid var(--border);
+    overflow:hidden;margin-bottom:28px;transition:box-shadow 0.2s;
+    display:none;
+  }
+  .week-card.active{display:block;}
+  .week-card:hover{box-shadow:0 8px 32px rgba(0,0,0,0.1);}
+
+  .week-header{
+    padding:24px 28px 20px;display:flex;align-items:flex-start;gap:16px;
+    border-bottom:2px solid var(--border);
+  }
+  .week-num{
+    font-family:'Orbitron',sans-serif;font-size:0.72em;font-weight:900;
+    padding:4px 14px;border-radius:50px;flex-shrink:0;white-space:nowrap;
+    margin-top:3px;letter-spacing:1px;
+  }
+  .week-header-text h3{font-size:1.25em;font-weight:900;margin-bottom:4px;}
+  .week-header-text .week-theme{font-size:0.85em;color:var(--muted);font-weight:600;}
+
+  .week-body{padding:28px;}
+  .week-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  
+  .block{margin-bottom:24px;}
+  .block-title{
+    display:flex;align-items:center;gap:8px;font-weight:900;font-size:0.95em;
+    margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border);
+  }
+  .block-title .ico{font-size:1.2em;}
+
+  .item-list{list-style:none;}
+  .item-list li{
+    display:flex;align-items:flex-start;gap:8px;padding:6px 0;
+    font-size:0.9em;color:var(--text);border-bottom:1px solid #f1f5f9;line-height:1.5;
+  }
+  .item-list li:last-child{border:none;}
+  .item-list li::before{content:'▸';color:var(--sky);font-size:0.85em;margin-top:2px;flex-shrink:0;}
+
+  .activity-card{
+    border-radius:12px;padding:14px 16px;margin-bottom:10px;
+    border-left:4px solid;
+  }
+  .activity-card .act-title{font-weight:800;font-size:0.88em;margin-bottom:4px;}
+  .activity-card .act-desc{font-size:0.83em;line-height:1.5;}
+  .activity-card .act-time{
+    font-size:0.76em;font-weight:700;margin-top:6px;
+    display:inline-block;padding:2px 8px;border-radius:50px;
+  }
+
+  /* Week color themes */
+  .w1{--wc:#1d4ed8;--wl:#dbeafe;--wb:#bfdbfe;}
+  .w2{--wc:#7c3aed;--wl:#ede9fe;--wb:#ddd6fe;}
+  .w3{--wc:#059669;--wl:#d1fae5;--wb:#a7f3d0;}
+  .w4{--wc:#d97706;--wl:#fef3c7;--wb:#fde68a;}
+  .w5{--wc:#ea580c;--wl:#ffedd5;--wb:#fed7aa;}
+  .w6{--wc:#db2777;--wl:#fce7f3;--wb:#fbcfe8;}
+  .w7{--wc:#0891b2;--wl:#cffafe;--wb:#a5f3fc;}
+  .w8{--wc:#7c3aed;--wl:#ede9fe;--wb:#ddd6fe;}
+
+  .week-card .week-num{background:var(--wl);color:var(--wc);}
+  .week-card .week-header{background:var(--wl);}
+  .activity-card{background:var(--wl);border-color:var(--wc);}
+  .activity-card .act-time{background:var(--wb);color:var(--wc);}
+  
+  /* ── QUIZ SECTION ── */
+  .quiz-card{
+    background:var(--card);border-radius:16px;border:2px solid var(--border);
+    padding:24px 28px;margin-bottom:16px;
+  }
+  .quiz-q{font-weight:800;font-size:0.95em;margin-bottom:14px;}
+  .quiz-options{display:flex;flex-direction:column;gap:8px;}
+  .quiz-opt{
+    display:flex;align-items:center;gap:10px;padding:10px 14px;
+    border-radius:10px;border:2px solid var(--border);cursor:pointer;
+    transition:all 0.15s;font-size:0.88em;font-weight:600;
+    background:var(--bg);
+  }
+  .quiz-opt:hover{border-color:var(--sky);background:#f0f9ff;}
+  .quiz-opt.correct{background:#d1fae5;border-color:#059669;color:#065f46;}
+  .quiz-opt.wrong{background:#fee2e2;border-color:#dc2626;color:#991b1b;}
+  .quiz-opt .opt-letter{
+    width:26px;height:26px;border-radius:50%;background:var(--border);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:0.85em;flex-shrink:0;
+  }
+  .quiz-opt.correct .opt-letter{background:#059669;color:#fff;}
+  .quiz-opt.wrong .opt-letter{background:#dc2626;color:#fff;}
+  .quiz-feedback{margin-top:10px;font-size:0.85em;font-weight:700;padding:8px 12px;border-radius:8px;display:none;}
+
+  /* ── MATERIALS ── */
+  .materials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
+  .mat-card{
+    background:var(--card);border:2px solid var(--border);border-radius:14px;
+    padding:16px;display:flex;align-items:center;gap:12px;
+    transition:border-color 0.2s;
+  }
+  .mat-card:hover{border-color:var(--sky);}
+  .mat-icon{font-size:1.8em;flex-shrink:0;}
+  .mat-name{font-weight:800;font-size:0.88em;}
+  .mat-qty{font-size:0.78em;color:var(--muted);}
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap{background:var(--card);border-radius:16px;padding:24px 28px;margin-bottom:36px;border:2px solid var(--border);}
+  .progress-label{display:flex;justify-content:space-between;font-weight:800;font-size:0.9em;margin-bottom:10px;}
+  .progress-bar{height:14px;background:#e2e8f0;border-radius:50px;overflow:hidden;}
+  .progress-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--blue),var(--sky));transition:width 0.4s;}
+
+  /* ── COMPETENCY BADGES ── */
+  .badges-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+  .badge{
+    display:flex;align-items:center;gap:6px;padding:6px 14px;
+    border-radius:50px;font-size:0.8em;font-weight:800;
+    border:2px solid;
+  }
+  .badge-green{background:#d1fae5;border-color:#059669;color:#065f46;}
+  .badge-blue{background:#dbeafe;border-color:#1d4ed8;color:#1e3a8a;}
+  .badge-purple{background:#ede9fe;border-color:#7c3aed;color:#4c1d95;}
+  .badge-orange{background:#ffedd5;border-color:#ea580c;color:#7c2d12;}
+
+  /* ── TABS ── */
+  .tab-nav{display:flex;gap:4px;margin-bottom:24px;background:#e2e8f0;border-radius:12px;padding:4px;}
+  .tab-nav-btn{
+    flex:1;padding:9px;border-radius:9px;border:none;background:transparent;
+    font-family:'Nunito',sans-serif;font-weight:800;font-size:0.85em;cursor:pointer;
+    transition:all 0.2s;color:var(--muted);
+  }
+  .tab-nav-btn.active{background:#fff;color:var(--blue);box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+  .tab-content-inner{display:none;}
+  .tab-content-inner.active{display:block;}
+
+  /* ── OLYMPIAD SECTION ── */
+  .olympiad-banner{
+    background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;
+    border-radius:20px;padding:40px;text-align:center;margin-bottom:36px;
+    position:relative;overflow:hidden;
+  }
+  .olympiad-banner::before{
+    content:'🏆';position:absolute;font-size:8em;opacity:0.05;
+    right:-20px;top:-20px;
+  }
+  .olympiad-banner h3{font-family:'Orbitron',sans-serif;font-size:1.5em;margin-bottom:10px;
+    background:linear-gradient(135deg,#fff,#93c5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .olympiad-banner p{color:#93c5fd;font-size:0.95em;max-width:500px;margin:0 auto;}
+
+  .challenge-card{
+    background:#fff;border-radius:14px;padding:20px 22px;margin-bottom:14px;
+    border-left:5px solid var(--blue);box-shadow:0 2px 12px rgba(0,0,0,0.06);
+    transition:transform 0.2s;
+  }
+  .challenge-card:hover{transform:translateX(4px);}
+  .challenge-card .ch-title{font-weight:900;font-size:1em;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+  .challenge-card .ch-desc{font-size:0.87em;color:var(--muted);line-height:1.6;}
+  .ch-diff{font-size:0.75em;font-weight:800;padding:2px 10px;border-radius:50px;margin-left:auto;}
+  .diff-easy{background:#d1fae5;color:#065f46;}
+  .diff-med{background:#fef3c7;color:#92400e;}
+  .diff-hard{background:#fee2e2;color:#991b1b;}
+
+  /* ── PRINT BUTTON ── */
+  .print-btn{
+    position:fixed;bottom:24px;right:24px;
+    background:linear-gradient(135deg,var(--blue),var(--purple));
+    color:#fff;padding:13px 22px;border-radius:50px;border:none;
+    font-family:'Nunito',sans-serif;font-weight:800;font-size:0.9em;
+    cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,0.35);
+    z-index:100;transition:transform 0.2s;display:flex;align-items:center;gap:8px;
+  }
+  .print-btn:hover{transform:scale(1.05);}
+
+  /* ── CHECKLIST ── */
+  .checklist-item{
+    display:flex;align-items:center;gap:12px;padding:10px 0;
+    border-bottom:1px solid #f1f5f9;font-size:0.9em;cursor:pointer;
+    user-select:none;
+  }
+  .checklist-item:last-child{border:none;}
+  .check-box{
+    width:22px;height:22px;border:2px solid var(--border);border-radius:6px;
+    flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    transition:all 0.2s;font-size:0.85em;
+  }
+  .checklist-item.done .check-box{background:var(--green);border-color:var(--green);color:#fff;}
+  .checklist-item.done .check-label{text-decoration:line-through;color:var(--muted);}
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:640px){
+    .week-grid{grid-template-columns:1fr;}
+    .cover h1{font-size:2em;}
+    .week-body{padding:20px 16px;}
+  }
+  @media print{
+    .week-nav,.print-btn,.week-btn{display:none!important;}
+    .week-card{display:block!important;break-inside:avoid;}
+    .cover{min-height:auto;padding:40px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════
+     COVER PAGE
+════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-robot">🤖</div>
+  <div class="cover-badge">⚡ Future Engineers Robotics Lab</div>
+  <h1>Beginner Robotics<br>Full Curriculum</h1>
+  <p class="cover-sub">Ages 6–8 · 8-Week Program · Build, Code & Compete</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><div class="num">8</div><div class="lbl">Weeks</div></div>
+    <div class="cover-meta-item"><div class="num">24</div><div class="lbl">Activities</div></div>
+    <div class="cover-meta-item"><div class="num">4</div><div class="lbl">Focus Areas</div></div>
+    <div class="cover-meta-item"><div class="num">60</div><div class="lbl">Min / Session</div></div>
+  </div>
+  <div class="cover-tags">
+    <span class="tag">🔧 Robot Building</span>
+    <span class="tag">💻 Coding</span>
+    <span class="tag">⚡ Sensors & Electronics</span>
+    <span class="tag">🏆 Olympiad Prep</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════ -->
+<div class="container">
+
+  <!-- OVERVIEW -->
+  <div class="section-header" style="margin-top:8px;">
+    <h2>Course Overview</h2>
+    <p>Everything instructors and parents need to know before Day 1</p>
+  </div>
+
+  <div class="overview-grid">
+    <div class="ov-card" style="border-color:#bfdbfe;">
+      <div class="ov-icon">🎯</div>
+      <div class="ov-title">Goal</div>
+      <div class="ov-val">Build & program a robot from scratch by Week 8</div>
+    </div>
+    <div class="ov-card" style="border-color:#ddd6fe;">
+      <div class="ov-icon">👧</div>
+      <div class="ov-title">Age Group</div>
+      <div class="ov-val">6–8 years old, no prior experience needed</div>
+    </div>
+    <div class="ov-card" style="border-color:#a7f3d0;">
+      <div class="ov-icon">⏱️</div>
+      <div class="ov-title">Session Length</div>
+      <div class="ov-val">60 minutes · 1 session per week</div>
+    </div>
+    <div class="ov-card" style="border-color:#fed7aa;">
+      <div class="ov-icon">🛠️</div>
+      <div class="ov-title">Main Kit</div>
+      <div class="ov-val">mBot Ranger or mBot2 (provided by lab)</div>
+    </div>
+    <div class="ov-card" style="border-color:#fde68a;">
+      <div class="ov-icon">💻</div>
+      <div class="ov-title">Software</div>
+      <div class="ov-val">mBlock 5 (Scratch-based, drag & drop)</div>
+    </div>
+    <div class="ov-card" style="border-color:#fbcfe8;">
+      <div class="ov-icon">🏅</div>
+      <div class="ov-title">Outcome</div>
+      <div class="ov-val">Certificate + Olympiad readiness assessment</div>
+    </div>
+  </div>
+
+  <!-- MATERIALS -->
+  <div class="section-header">
+    <h2>🛒 Materials Needed</h2>
+    <p>Per student per course (all provided by the lab)</p>
+  </div>
+  <div class="materials-grid" style="margin-bottom:48px;">
+    <div class="mat-card"><span class="mat-icon">🤖</span><div><div class="mat-name">mBot2 Robot Kit</div><div class="mat-qty">1 per student</div></div></div>
+    <div class="mat-card"><span class="mat-icon">💻</span><div><div class="mat-name">Laptop / Tablet</div><div class="mat-qty">1 per student (lab provided)</div></div></div>
+    <div class="mat-card"><span class="mat-icon">🔋</span><div><div class="mat-name">AA Batteries / USB-C</div><div class="mat-qty">4 per session</div></div></div>
+    <div class="mat-card"><span class="mat-icon">🔧</span><div><div class="mat-name">Screwdriver Set</div><div class="mat-qty">1 per 2 students</div></div></div>
+    <div class="mat-card"><span class="mat-icon">📏</span><div><div class="mat-name">Measuring Tape</div><div class="mat-qty">1 per group</div></div></div>
+    <div class="mat-card"><span class="mat-icon">📓</span><div><div class="mat-name">Engineer Notebook</div><div class="mat-qty">1 per student</div></div></div>
+    <div class="mat-card"><span class="mat-icon">🧲</span><div><div class="mat-name">Sensor Add-on Pack</div><div class="mat-qty">1 per student (Weeks 5–7)</div></div></div>
+    <div class="mat-card"><span class="mat-icon">🎨</span><div><div class="mat-name">Craft Supplies</div><div class="mat-qty">Shared (decorating Week 8)</div></div></div>
+  </div>
+
+  <!-- WEEK NAV -->
+  <div class="section-header">
+    <h2>📅 Weekly Lessons</h2>
+    <p>Click a week to view the full lesson plan</p>
+  </div>
+
+  <div class="week-nav" id="weekNav">
+    <button class="week-btn active" onclick="showWeek(1,this)">Week 1</button>
+    <button class="week-btn" onclick="showWeek(2,this)">Week 2</button>
+    <button class="week-btn" onclick="showWeek(3,this)">Week 3</button>
+    <button class="week-btn" onclick="showWeek(4,this)">Week 4</button>
+    <button class="week-btn" onclick="showWeek(5,this)">Week 5</button>
+    <button class="week-btn" onclick="showWeek(6,this)">Week 6</button>
+    <button class="week-btn" onclick="showWeek(7,this)">Week 7</button>
+    <button class="week-btn" onclick="showWeek(8,this)">Week 8</button>
+  </div>
+
+  <!-- ── WEEK 1 ── -->
+  <div class="week-card w1 active" id="week1">
+    <div class="week-header">
+      <span class="week-num">WEEK 01</span>
+      <div class="week-header-text">
+        <h3>🤖 Welcome to Robotics! What IS a Robot?</h3>
+        <div class="week-theme">Theme: Exploration & Discovery · Hardware Focus</div>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="week-grid">
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🎯</span> Learning Objectives</div>
+            <ul class="item-list">
+              <li>Define what a robot is and give 3 real-world examples</li>
+              <li>Identify the main parts of the mBot2 robot (body, wheels, brain, eyes)</li>
+              <li>Understand input → process → output concept</li>
+              <li>Safely handle electronic components</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🧠</span> Key Vocabulary</div>
+            <ul class="item-list">
+              <li><strong>Robot</strong> — A machine that can sense, think, and act</li>
+              <li><strong>Sensor</strong> — The robot's "eyes and ears"</li>
+              <li><strong>Actuator</strong> — The robot's "muscles" (motors/wheels)</li>
+              <li><strong>Controller</strong> — The robot's "brain" (the board)</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-title"><span class="ico">📋</span> Pre-Class Checklist</div>
+            <div onclick="toggle(this)" class="checklist-item"><div class="check-box">✓</div><span class="check-label">Charge all mBot2 units</span></div>
+            <div onclick="toggle(this)" class="checklist-item"><div class="check-box">✓</div><span class="check-label">Install mBlock 5 on all laptops</span></div>
+            <div onclick="toggle(this)" class="checklist-item"><div class="check-box">✓</div><span class="check-label">Print "Parts of a Robot" worksheet</span></div>
+            <div onclick="toggle(this)" class="checklist-item"><div class="check-box">✓</div><span class="check-label">Prepare robot show-and-tell examples</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">📍</span> 60-Minute Plan</div>
+            <div class="activity-card">
+              <div class="act-title">🎉 Ice-Breaker: Robot Freeze Dance</div>
+              <div class="act-desc">Kids move like robots — stiff arms, beeping sounds. When music stops, freeze! Gets energy out and introduces "robot-like" movement.</div>
+              <div class="act-time">⏱ 0–5 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🎬 Video: Robots in Real Life</div>
+              <div class="act-desc">Watch a 3-min clip of robots (Spot the robot dog, Mars rover, robotic arm in a factory). Pause and ask: "What can YOU spot that the robot is doing?"</div>
+              <div class="act-time">⏱ 5–15 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🔧 Meet the mBot2! Unbox & Explore</div>
+              <div class="act-desc">Each child gets an mBot2. Guided exploration: name each part, touch the sensor, spin a wheel by hand. Draw their robot in engineer notebook.</div>
+              <div class="act-time">⏱ 15–35 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🃏 Parts Matching Card Game</div>
+              <div class="act-desc">In pairs, match picture cards of robot parts to their names and functions. First pair to match all 8 cards wins a "Robot Star" sticker.</div>
+              <div class="act-time">⏱ 35–50 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">⭐ Reflection Circle</div>
+              <div class="act-desc">"Share one thing you discovered today." Students write their name on their mBot2 sticker label. Assign engineer notebooks.</div>
+              <div class="act-time">⏱ 50–60 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="block" style="margin-top:8px;">
+        <div class="block-title"><span class="ico">🏠</span> Take-Home Challenge</div>
+        <ul class="item-list">
+          <li>Find 3 robots at home or on TV. Draw them in your engineer notebook.</li>
+          <li>Ask a parent: "What do YOU think a robot is?"</li>
+        </ul>
+      </div>
+      <div class="badges-row">
+        <div class="badge badge-blue">🔧 Hardware Explorer</div>
+        <div class="badge badge-green">🎯 Robot Identifier</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WEEK 2 ── -->
+  <div class="week-card w2" id="week2">
+    <div class="week-header">
+      <span class="week-num">WEEK 02</span>
+      <div class="week-header-text">
+        <h3>🔩 Build It! Assembling Your Robot</h3>
+        <div class="week-theme">Theme: Construction & Teamwork · Hardware Focus</div>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="week-grid">
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🎯</span> Learning Objectives</div>
+            <ul class="item-list">
+              <li>Assemble the mBot2 chassis from components using step-by-step instructions</li>
+              <li>Attach wheels, motors, and the main board correctly</li>
+              <li>Practice patience, precision, and following instructions</li>
+              <li>Identify left vs. right motor orientation</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🧠</span> Key Vocabulary</div>
+            <ul class="item-list">
+              <li><strong>Chassis</strong> — The robot's frame/body structure</li>
+              <li><strong>Motor</strong> — Converts electricity into movement</li>
+              <li><strong>Screwdriver</strong> — Tool for fastening parts safely</li>
+              <li><strong>Assembly</strong> — Putting parts together in order</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">📍</span> 60-Minute Plan</div>
+            <div class="activity-card">
+              <div class="act-title">🏗️ Warm-up: LEGO Speed Build</div>
+              <div class="act-desc">2-minute challenge — build the tallest tower using 10 LEGO bricks. Introduces the concept of "following a design" and working fast-but-carefully.</div>
+              <div class="act-time">⏱ 0–8 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">📖 Demo: Instructor Builds First</div>
+              <div class="act-desc">Instructor assembles the chassis step-by-step on a document camera / big screen. Students call out each part name as it's added.</div>
+              <div class="act-time">⏱ 8–18 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🔧 Build Time! Let's Go!</div>
+              <div class="act-desc">Students assemble chassis in pairs using the illustrated guide. Instructor and assistant circulate. Celebrate each milestone with a "click" clap when a part snaps in.</div>
+              <div class="act-time">⏱ 18–48 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🔍 Quality Check & Troubleshoot</div>
+              <div class="act-desc">Partner checks: "Can the wheels spin freely? Is the board facing forward? Are all screws tight?" Fix any issues as a team.</div>
+              <div class="act-time">⏱ 48–56 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">📸 Robot Portrait Day!</div>
+              <div class="act-desc">Each student holds their assembled robot for a photo (printed for their certificate later). Name their robot!</div>
+              <div class="act-time">⏱ 56–60 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="block" style="margin-top:8px;">
+        <div class="block-title"><span class="ico">🏠</span> Take-Home Challenge</div>
+        <ul class="item-list">
+          <li>Tell your family: "My robot is called _____ and it has ___ wheels."</li>
+          <li>Bonus: Find a picture of a real robot that looks like yours!</li>
+        </ul>
+      </div>
+      <div class="badges-row">
+        <div class="badge badge-purple">🔩 Master Assembler</div>
+        <div class="badge badge-blue">🤝 Team Builder</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WEEK 3 ── -->
+  <div class="week-card w3" id="week3">
+    <div class="week-header">
+      <span class="week-num">WEEK 03</span>
+      <div class="week-header-text">
+        <h3>💻 First Code! Making It Move</h3>
+        <div class="week-theme">Theme: Introduction to Programming · Coding Focus</div>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="week-grid">
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🎯</span> Learning Objectives</div>
+            <ul class="item-list">
+              <li>Open mBlock 5 and connect the mBot2 via Bluetooth/USB</li>
+              <li>Use Move blocks to drive forward, backward, left, right</li>
+              <li>Understand that code = instructions for the robot</li>
+              <li>Run a program and observe the robot's reaction</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🧠</span> Key Vocabulary</div>
+            <ul class="item-list">
+              <li><strong>Code</strong> — Instructions written for a computer/robot</li>
+              <li><strong>Block</strong> — A single instruction in Scratch/mBlock</li>
+              <li><strong>Program</strong> — A set of blocks that runs in order</li>
+              <li><strong>Debug</strong> — Finding and fixing errors in code</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-title"><span class="ico">💡</span> Instructor Tips</div>
+            <ul class="item-list">
+              <li>Use the "Human Robot" game: whisper instructions to a child, they follow exactly — even silly ones. Shows why code must be precise!</li>
+              <li>Let kids discover bugs naturally. Say "interesting! Why did it do that?"</li>
+              <li>Pair faster learners with beginners as "Code Helpers"</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">📍</span> 60-Minute Plan</div>
+            <div class="activity-card">
+              <div class="act-title">🎮 Human Robot Game</div>
+              <div class="act-desc">One kid is the robot, one is the programmer. Programmer says: "Move forward 3 steps. Turn right. Move forward 2 steps." Robot must follow EXACTLY — even if it walks into a wall!</div>
+              <div class="act-time">⏱ 0–10 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">💻 mBlock Setup & First Connection</div>
+              <div class="act-desc">Open mBlock 5, select mBot2, connect via USB. Instructor demo first. Students connect their own robots. Celebrate the first successful connection!</div>
+              <div class="act-time">⏱ 10–22 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">▶️ My First 3 Blocks!</div>
+              <div class="act-desc">Drag: "Move forward 1 second" + "Turn left 0.5 sec" + "Move forward 1 second". Hit run. Watch robot move! Students modify the time values and observe changes.</div>
+              <div class="act-time">⏱ 22–42 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🏁 Square Challenge</div>
+              <div class="act-desc">Can you program your robot to drive in a SQUARE? Use Move + Turn blocks. Hardest part: getting exactly 90° turns. First to complete gets to be "Code Captain" next week!</div>
+              <div class="act-time">⏱ 42–56 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">📓 Engineer Log</div>
+              <div class="act-desc">Write/draw in notebook: "Today my robot learned to ___." Save their square program with their name.</div>
+              <div class="act-time">⏱ 56–60 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="badges-row">
+        <div class="badge badge-green">💻 First Coder</div>
+        <div class="badge badge-blue">🏁 Square Maker</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WEEK 4 ── -->
+  <div class="week-card w4" id="week4">
+    <div class="week-header">
+      <span class="week-num">WEEK 04</span>
+      <div class="week-header-text">
+        <h3>🔁 Loops & Lights — Repeating Actions</h3>
+        <div class="week-theme">Theme: Loops, Sequence & LED Control · Coding Focus</div>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="week-grid">
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🎯</span> Learning Objectives</div>
+            <ul class="item-list">
+              <li>Understand why loops save time (don't repeat blocks 100x!)</li>
+              <li>Use the "Repeat" block to loop movements</li>
+              <li>Control the mBot2's LED lights (color & blink)</li>
+              <li>Combine move + lights in one program</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🧠</span> Key Vocabulary</div>
+            <ul class="item-list">
+              <li><strong>Loop</strong> — Repeating a set of instructions multiple times</li>
+              <li><strong>Repeat block</strong> — Runs code a set number of times</li>
+              <li><strong>Forever block</strong> — Runs code non-stop until stopped</li>
+              <li><strong>LED</strong> — Light Emitting Diode — the robot's lights</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">📍</span> 60-Minute Plan</div>
+            <div class="activity-card">
+              <div class="act-title">🔁 Loop-de-Loop Warm Up</div>
+              <div class="act-desc">Stand up. Clap 3 times. Sit down. Repeat 4 times! Now imagine writing that down. Loops make it shorter — only write the instructions ONCE.</div>
+              <div class="act-time">⏱ 0–8 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">⭕ Repeat Block: Drive in a Circle</div>
+              <div class="act-desc">Use Repeat(8) + [Move forward 0.5s + Turn right 0.5s]. Robot makes an octagon or circle! Students experiment with repeat count to change the circle size.</div>
+              <div class="act-time">⏱ 8–28 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">💡 Light Show! RGB LED Control</div>
+              <div class="act-desc">Add LED color blocks inside a Repeat loop. Make a disco robot! Set light to red → wait 0.5s → blue → wait 0.5s → green. Repeat forever. Students choose their own colors.</div>
+              <div class="act-time">⏱ 28–46 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🎉 Robot Disco Challenge</div>
+              <div class="act-desc">Combine movement + lights in a single program. Play music in class. Whose robot has the best "dance"? Students vote (can't vote for own!).</div>
+              <div class="act-time">⏱ 46–56 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🧩 Code Detective</div>
+              <div class="act-desc">Show broken code on screen (missing repeat, wrong order). Students spot and fix the bugs. First to raise hand with the correct answer wins a sticker.</div>
+              <div class="act-time">⏱ 56–60 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="badges-row">
+        <div class="badge badge-orange">🔁 Loop Master</div>
+        <div class="badge badge-purple">💡 Light Artist</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WEEK 5 ── -->
+  <div class="week-card w5" id="week5">
+    <div class="week-header">
+      <span class="week-num">WEEK 05</span>
+      <div class="week-header-text">
+        <h3>👁️ Robot Eyes — Ultrasonic Sensor</h3>
+        <div class="week-theme">Theme: Sensing the World · Sensors & Electronics Focus</div>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="week-grid">
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🎯</span> Learning Objectives</div>
+            <ul class="item-list">
+              <li>Understand how ultrasonic sensors work (like bat echolocation!)</li>
+              <li>Read sensor distance values in mBlock</li>
+              <li>Program the robot to stop before hitting a wall</li>
+              <li>Use "If...Then" logic based on sensor data</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🧠</span> Key Vocabulary</div>
+            <ul class="item-list">
+              <li><strong>Ultrasonic</strong> — Sound waves beyond human hearing</li>
+              <li><strong>Distance</strong> — How far away an object is (in cm)</li>
+              <li><strong>If...Then</strong> — Conditional logic: "IF something, THEN do this"</li>
+              <li><strong>Threshold</strong> — The "trigger" distance (e.g. stop if &lt; 15cm)</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-title"><span class="ico">⚡</span> How the Sensor Works</div>
+            <ul class="item-list">
+              <li>Sends out an ultrasonic pulse (like shouting "echo!")</li>
+              <li>Pulse bounces off object and returns</li>
+              <li>Robot measures time taken → calculates distance</li>
+              <li>Bats use the same trick to fly in the dark!</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">📍</span> 60-Minute Plan</div>
+            <div class="activity-card">
+              <div class="act-title">🦇 Echolocation Game</div>
+              <div class="act-desc">One child is blindfolded (the bat). Others clap slowly when they're far, fast when they're close. Blindfolded child navigates by sound. Intro to ultrasonic sensing!</div>
+              <div class="act-time">⏱ 0–8 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">📡 Read the Sensor Live</div>
+              <div class="act-desc">Use mBlock monitor mode to display live distance values. Students put hand in front of sensor — watch the number change! Record values at 5cm, 10cm, 20cm, 50cm in their notebook.</div>
+              <div class="act-time">⏱ 8–22 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🛑 Smart Braking: Stop Before the Wall</div>
+              <div class="act-desc">Code: "Move forward forever. IF distance &lt; 15cm, THEN stop + beep + red light." Use masking tape to mark a "danger zone" on the floor. Robot must stop in the zone!</div>
+              <div class="act-time">⏱ 22–44 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🏎️ Obstacle Course Challenge</div>
+              <div class="act-desc">Set up cardboard boxes as obstacles. Program robot to navigate without crashing. Closest stop to the wall without touching = winner!</div>
+              <div class="act-time">⏱ 44–57 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">📓 Log It</div>
+              <div class="act-desc">Draw the sensor in notebook. Write: "The sensor works by ___."</div>
+              <div class="act-time">⏱ 57–60 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="badges-row">
+        <div class="badge badge-orange">👁️ Sensor Whiz</div>
+        <div class="badge badge-green">🛑 Safe Driver</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WEEK 6 ── -->
+  <div class="week-card w6" id="week6">
+    <div class="week-header">
+      <span class="week-num">WEEK 06</span>
+      <div class="week-header-text">
+        <h3>🖤 Follow the Line — IR Sensor</h3>
+        <div class="week-theme">Theme: Line Following · Sensors & Coding Combined</div>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="week-grid">
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🎯</span> Learning Objectives</div>
+            <ul class="item-list">
+              <li>Understand how infrared (IR) sensors detect black vs. white surfaces</li>
+              <li>Program a basic line-following algorithm</li>
+              <li>Tune the robot's speed for smooth line following</li>
+              <li>Understand that line following is used in REAL factory robots!</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🧠</span> Key Vocabulary</div>
+            <ul class="item-list">
+              <li><strong>Infrared (IR)</strong> — Light invisible to humans, detected by sensors</li>
+              <li><strong>Reflect</strong> — Light bouncing back (white surface reflects more)</li>
+              <li><strong>Absorb</strong> — Light not bouncing back (black surface absorbs)</li>
+              <li><strong>Algorithm</strong> — A step-by-step problem-solving recipe</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">📍</span> 60-Minute Plan</div>
+            <div class="activity-card">
+              <div class="act-title">⚫ Light Reflection Experiment</div>
+              <div class="act-desc">Shine a flashlight on black paper vs. white paper. Which reflects more? Relate to IR sensor. Students predict: "If the sensor sees BLACK, the robot should turn ___."</div>
+              <div class="act-time">⏱ 0–10 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🖤 Draw the Track!</div>
+              <div class="act-desc">Students use black masking tape to create their own line track on a white poster board. A curve, a straight, maybe a gentle turn. The robot must follow THEIR design!</div>
+              <div class="act-time">⏱ 10–22 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">💻 Code the Line Follower</div>
+              <div class="act-desc">Use mBlock's built-in line-following extension. "IF left sensor = black AND right sensor = white, THEN turn left." Discuss why this works. Students adjust speed.</div>
+              <div class="act-time">⏱ 22–44 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🏁 Line Race!</div>
+              <div class="act-desc">Each pair's robot follows their custom track. Timed! Best time wins "Speed Bot" trophy sticker. Discuss: why did some robots follow better? (tuning, track shape)</div>
+              <div class="act-time">⏱ 44–57 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🤯 Real World Link</div>
+              <div class="act-desc">Show photo of Amazon warehouse floor-following robots. "Your robot does EXACTLY what those $500,000 machines do!"</div>
+              <div class="act-time">⏱ 57–60 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="badges-row">
+        <div class="badge badge-purple">🖤 Line Follower</div>
+        <div class="badge badge-orange">⚡ Algorithm Designer</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WEEK 7 ── -->
+  <div class="week-card w7" id="week7">
+    <div class="week-header">
+      <span class="week-num">WEEK 07</span>
+      <div class="week-header-text">
+        <h3>🔊 Sound & Smarts — Making Robots React</h3>
+        <div class="week-theme">Theme: Sound Sensor + If/Else Logic · All Skills Combined</div>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="week-grid">
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🎯</span> Learning Objectives</div>
+            <ul class="item-list">
+              <li>Use the sound sensor to detect loud vs. quiet sounds</li>
+              <li>Apply if/else logic to make the robot react to claps</li>
+              <li>Combine sound, movement, and lights in one program</li>
+              <li>Plan and document a multi-sensor program in their notebook</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🧠</span> Key Vocabulary</div>
+            <ul class="item-list">
+              <li><strong>If/Else</strong> — Two paths: if condition true → do A, otherwise → do B</li>
+              <li><strong>Decibel (dB)</strong> — Unit measuring how loud a sound is</li>
+              <li><strong>Threshold</strong> — The "trigger" level for detecting a clap</li>
+              <li><strong>Multi-sensor</strong> — Using more than one sensor together</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">📍</span> 60-Minute Plan</div>
+            <div class="activity-card">
+              <div class="act-title">👏 Clap-Controlled Warm Up</div>
+              <div class="act-desc">Instructor controls student "robots" with claps. 1 clap = move forward. 2 claps = turn. 3 claps = stop. Kids take turns being the robot and programmer.</div>
+              <div class="act-time">⏱ 0–8 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">📊 Sound Level Meter</div>
+              <div class="act-desc">In mBlock monitor mode, whisper near sensor vs. shout. Read dB values. Find the threshold where a clap registers. Write that number in notebook.</div>
+              <div class="act-time">⏱ 8–20 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">👏 Clap-to-Go Robot!</div>
+              <div class="act-desc">Code: "IF sound &gt; 60dB THEN move forward 1s + green light. ELSE stop + red light." Test with claps from different distances. Students tune their threshold.</div>
+              <div class="act-time">⏱ 20–42 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🧠 Design Challenge: Clap Sequence</div>
+              <div class="act-desc">Advanced: 1 clap = go, 2 claps = turn, 3 claps = stop. Students plan this in their notebook FIRST, then code it. Instructor helps with nesting if/else.</div>
+              <div class="act-time">⏱ 42–55 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🌟 Share & Celebrate</div>
+              <div class="act-desc">Each student demos their clap-robot to the class. Preview: "Next week = FINAL SHOWCASE! Bring your ideas!"</div>
+              <div class="act-time">⏱ 55–60 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="badges-row">
+        <div class="badge badge-blue">🔊 Sound Programmer</div>
+        <div class="badge badge-green">🧠 Logic Thinker</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WEEK 8 ── -->
+  <div class="week-card w8" id="week8">
+    <div class="week-header">
+      <span class="week-num">WEEK 08</span>
+      <div class="week-header-text">
+        <h3>🏆 Grand Finale — Robot Showcase & Olympiad Preview!</h3>
+        <div class="week-theme">Theme: Presentation, Competition & Celebration</div>
+      </div>
+    </div>
+    <div class="week-body">
+      <div class="week-grid">
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🎯</span> Learning Objectives</div>
+            <ul class="item-list">
+              <li>Present their robot project to an audience (parents invited!)</li>
+              <li>Demonstrate at least 2 learned skills on their robot</li>
+              <li>Understand what a Robotics Olympiad is and how to enter</li>
+              <li>Complete a self-assessment of skills learned across 8 weeks</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-title"><span class="ico">🏟️</span> Showcase Events</div>
+            <ul class="item-list">
+              <li><strong>Obstacle Course Race</strong> — Ultrasonic sensor stops robot before walls. Fastest wins!</li>
+              <li><strong>Line Following Time Trial</strong> — Complete the track fastest without leaving the line</li>
+              <li><strong>Light Show</strong> — Most creative LED sequence voted by parents</li>
+              <li><strong>Clap Command Demo</strong> — Show parents your voice-controlled robot!</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="block">
+            <div class="block-title"><span class="ico">📍</span> 60-Minute Plan</div>
+            <div class="activity-card">
+              <div class="act-title">🎨 Robot Decoration Time</div>
+              <div class="act-desc">Students add stickers, paint pens, or craft foam to personalize their robots. Give them names on a printed label. "Your robot is YOUR creation!"</div>
+              <div class="act-time">⏱ 0–10 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🎤 Practice Pitch (2 min each)</div>
+              <div class="act-desc">"Hi, my robot is called ___. I programmed it to ___. The hardest part was ___. The coolest thing it can do is ___." Practice with a partner first.</div>
+              <div class="act-time">⏱ 10–22 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🏆 GRAND SHOWCASE!</div>
+              <div class="act-desc">Run all 4 events simultaneously at stations. Parents rotate. Judges (instructors) score on: completion, creativity, presentation. Everyone wins a ribbon!</div>
+              <div class="act-time">⏱ 22–48 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🏅 Awards Ceremony</div>
+              <div class="act-desc">Present: Certificates of Completion + custom badges (Fastest Bot, Most Creative, Best Coder, Best Builder, Most Improved). Every student recognized!</div>
+              <div class="act-time">⏱ 48–56 min</div>
+            </div>
+            <div class="activity-card">
+              <div class="act-title">🚀 Olympiad Preview & What's Next</div>
+              <div class="act-desc">Show Olympiad video. Explain Intermediate track. Hand out enrollment forms for families. Group photo with all robots!</div>
+              <div class="act-time">⏱ 56–60 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="block" style="margin-top:8px;">
+        <div class="block-title"><span class="ico">🏆</span> Awards to Give Out</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
+          <div style="background:#fef3c7;border:2px solid #d97706;border-radius:10px;padding:12px;text-align:center;"><div style="font-size:1.5em;">🏎️</div><div style="font-weight:800;font-size:0.85em;">Fastest Bot</div></div>
+          <div style="background:#d1fae5;border:2px solid #059669;border-radius:10px;padding:12px;text-align:center;"><div style="font-size:1.5em;">💻</div><div style="font-weight:800;font-size:0.85em;">Best Coder</div></div>
+          <div style="background:#ede9fe;border:2px solid #7c3aed;border-radius:10px;padding:12px;text-align:center;"><div style="font-size:1.5em;">🎨</div><div style="font-weight:800;font-size:0.85em;">Most Creative</div></div>
+          <div style="background:#dbeafe;border:2px solid #1d4ed8;border-radius:10px;padding:12px;text-align:center;"><div style="font-size:1.5em;">🔧</div><div style="font-weight:800;font-size:0.85em;">Best Builder</div></div>
+          <div style="background:#ffedd5;border:2px solid #ea580c;border-radius:10px;padding:12px;text-align:center;"><div style="font-size:1.5em;">📈</div><div style="font-weight:800;font-size:0.85em;">Most Improved</div></div>
+          <div style="background:#fce7f3;border:2px solid #db2777;border-radius:10px;padding:12px;text-align:center;"><div style="font-size:1.5em;">⭐</div><div style="font-weight:800;font-size:0.85em;">Team Player</div></div>
+        </div>
+      </div>
+      <div class="badges-row">
+        <div class="badge badge-purple">🏆 Robotics Graduate</div>
+        <div class="badge badge-orange">🚀 Olympiad Ready</div>
+        <div class="badge badge-blue">🎓 Future Engineer</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ QUIZ ════ -->
+  <div class="section-header" style="margin-top:20px;">
+    <h2>🧠 Knowledge Quiz</h2>
+    <p>Use these at the end of each week. Interactive — click an answer!</p>
+  </div>
+
+  <div class="quiz-card">
+    <div class="quiz-q">Q1 · Week 1: What are the three things a robot can do?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">A</div> Talk, Walk, and Sleep</div>
+      <div class="quiz-opt" onclick="answer(this,'correct')"><div class="opt-letter">B</div> Sense, Think (Process), and Act</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">C</div> Eat, Drink, and Play</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">D</div> Build, Jump, and Swim</div>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-card">
+    <div class="quiz-q">Q2 · Week 3: What is DEBUGGING?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">A</div> Removing insects from the classroom</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">B</div> Writing new code from scratch</div>
+      <div class="quiz-opt" onclick="answer(this,'correct')"><div class="opt-letter">C</div> Finding and fixing errors in your code</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">D</div> Turning your robot off and on again</div>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-card">
+    <div class="quiz-q">Q3 · Week 4: Why do we use LOOPS in code?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">A</div> To make the robot spin in circles</div>
+      <div class="quiz-opt" onclick="answer(this,'correct')"><div class="opt-letter">B</div> To repeat instructions without writing them over and over</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">C</div> To make our code look fancier</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">D</div> Loops are only for games, not robots</div>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-card">
+    <div class="quiz-q">Q4 · Week 5: How does an ultrasonic sensor measure distance?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">A</div> It uses a tiny camera to take pictures</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">B</div> It measures how bright the light is</div>
+      <div class="quiz-opt" onclick="answer(this,'correct')"><div class="opt-letter">C</div> It sends out sound waves and times how long they take to bounce back</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">D</div> It counts the seconds as you drive</div>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-card">
+    <div class="quiz-q">Q5 · Week 6: Why does a line-following robot turn LEFT when the LEFT sensor detects BLACK?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">A</div> Black means go, so it goes left</div>
+      <div class="quiz-opt" onclick="answer(this,'correct')"><div class="opt-letter">B</div> The left sensor is off the white line, so the robot steers back toward it</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">C</div> The robot is confused and picks a random direction</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><div class="opt-letter">D</div> Black absorbs light so the motor shuts down</div>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- ════ OLYMPIAD PREP ════ -->
+  <div class="section-header" style="margin-top:20px;">
+    <h2>🏆 Olympiad Prep Challenges</h2>
+    <p>Extra challenges for advanced students — or as Week 8 bonus events!</p>
+  </div>
+
+  <div class="olympiad-banner">
+    <h3>What is a Robotics Olympiad?</h3>
+    <p>A Robotics Olympiad is a competition where student teams design, build, and program robots to complete specific challenges — navigating mazes, picking up objects, following lines, or reacting to their environment. Competitions happen at local, national, and international levels!</p>
+  </div>
+
+  <div class="challenge-card" style="border-color:#1d4ed8;">
+    <div class="ch-title">🏁 Challenge 1: Maze Navigator <span class="ch-diff diff-easy">Easy</span></div>
+    <div class="ch-desc">Set up a simple maze with cardboard walls. Program your robot to reach the end without touching any walls. Use your ultrasonic sensor to detect walls on the sides! Time limit: 2 minutes. Score: 10pts for completion, bonus 5pts for speed.</div>
+  </div>
+  <div class="challenge-card" style="border-color:#059669;">
+    <div class="ch-title">⭕ Challenge 2: Precision Parking <span class="ch-diff diff-easy">Easy</span></div>
+    <div class="ch-desc">Draw a parking space on the floor with tape (40cm x 25cm). Program your robot to drive forward and stop exactly inside the space. NO sensor allowed — pure timing code only! Closest to center wins. This tests precise programming skills.</div>
+  </div>
+  <div class="challenge-card" style="border-color:#d97706;">
+    <div class="ch-title">🖤 Challenge 3: Line Dash <span class="ch-diff diff-med">Medium</span></div>
+    <div class="ch-desc">A winding black tape track (approx 2 meters). Program your robot to complete it in the fastest time while staying on the line. Penalty: +2 seconds for each line crossing. Best time after 2 attempts wins. Tests sensor tuning and speed optimization.</div>
+  </div>
+  <div class="challenge-card" style="border-color:#ea580c;">
+    <div class="ch-title">👏 Challenge 4: Clap Command Relay <span class="ch-diff diff-med">Medium</span></div>
+    <div class="ch-desc">Robot must travel from Point A to Point B using ONLY clap commands. 1 clap = forward, 2 claps = turn 90°, 3 claps = stop. Complete without touching the robot. Time starts on first clap, ends when robot crosses the finish line!</div>
+  </div>
+  <div class="challenge-card" style="border-color:#7c3aed;">
+    <div class="ch-title">🤖 Challenge 5: Sumo Bot <span class="ch-diff diff-hard">Hard</span></div>
+    <div class="ch-desc">Two robots enter a circular arena (white circle, 1m diameter). Program your robot to push the opponent out of the ring using ultrasonic detection and evasion. Must stay inside the white boundary (IR sensor). 3 rounds, best of 3 wins. This is a REAL Olympiad event!</div>
+  </div>
+
+  <!-- PROGRESS TRACKER -->
+  <div class="section-header" style="margin-top:20px;">
+    <h2>📊 Student Progress Tracker</h2>
+    <p>Track your class's completion — click items to check them off</p>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Course Progress</span><span id="progressPct">0%</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+  <div style="background:#fff;border-radius:16px;border:2px solid var(--border);padding:24px 28px;">
+    <div class="block-title" style="margin-bottom:16px;"><span class="ico">✅</span> Weekly Milestones</div>
+    <div id="milestones">
+      <div onclick="toggleMilestone(this)" class="checklist-item"><div class="check-box">✓</div><span class="check-label">Week 1 Complete — Robot parts identified, engineer notebook started</span></div>
+      <div onclick="toggleMilestone(this)" class="checklist-item"><div class="check-box">✓</div><span class="check-label">Week 2 Complete — mBot2 fully assembled, robot named</span></div>
+      <div onclick="toggleMilestone(this)" class="checklist-item"><div class="check-box">✓</div><span class="check-label">Week 3 Complete — First program written, square challenge attempted</span></div>
+      <div onclick="toggleMilestone(this)" class="checklist-item"><div class="check-box">✓</div><span class="check-label">Week 4 Complete — Loops mastered, LED light show created</span></div>
+      <div onclick="toggleMilestone(this)" class="checklist-item"><div class="check-box">✓</div><span class="check-label">Week 5 Complete — Ultrasonic sensor used, obstacle course completed</span></div>
+      <div onclick="toggleMilestone(this)" class="checklist-item"><div class="check-box">✓</div><span class="check-label">Week 6 Complete — Line following programmed and raced</span></div>
+      <div onclick="toggleMilestone(this)" class="checklist-item"><div class="check-box">✓</div><span class="check-label">Week 7 Complete — Sound sensor + if/else logic mastered</span></div>
+      <div onclick="toggleMilestone(this)" class="checklist-item"><div class="check-box">✓</div><span class="check-label">Week 8 Complete — Showcase presented, certificate awarded! 🎓</span></div>
+    </div>
+  </div>
+
+</div><!-- end container -->
+
+<!-- PRINT BUTTON -->
+<button class="print-btn" onclick="window.print()">🖨️ Print Curriculum</button>
+
+<script>
+  // Week nav
+  function showWeek(n, btn) {
+    document.querySelectorAll('.week-card').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('week'+n).classList.add('active');
+    btn.classList.add('active');
+    document.getElementById('week'+n).scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  // Quiz
+  function answer(el, type) {
+    const card = el.closest('.quiz-card');
+    if (card.dataset.answered) return;
+    card.dataset.answered = 'yes';
+    card.querySelectorAll('.quiz-opt').forEach(o => o.style.pointerEvents = 'none');
+    el.classList.add(type);
+    const fb = card.querySelector('.quiz-feedback');
+    fb.style.display = 'block';
+    if (type === 'correct') {
+      fb.style.background = '#d1fae5'; fb.style.color = '#065f46';
+      fb.textContent = '✅ Correct! Great job!';
+    } else {
+      fb.style.background = '#fee2e2'; fb.style.color = '#991b1b';
+      fb.textContent = '❌ Not quite — try to find the correct answer!';
+      // highlight correct
+      card.querySelectorAll('.quiz-opt').forEach(o => {
+        if (o.getAttribute('onclick').includes('correct')) o.classList.add('correct');
+      });
+    }
+  }
+
+  // Checklist (in lesson plans)
+  function toggle(el) {
+    el.classList.toggle('done');
+  }
+
+  // Milestone progress
+  function toggleMilestone(el) {
+    el.classList.toggle('done');
+    updateProgress();
+  }
+  function updateProgress() {
+    const total = document.querySelectorAll('#milestones .checklist-item').length;
+    const done = document.querySelectorAll('#milestones .checklist-item.done').length;
+    const pct = Math.round((done/total)*100);
+    document.getElementById('progressFill').style.width = pct+'%';
+    document.getElementById('progressPct').textContent = pct+'%';
+  }
+</script>
+</body>
+</html>
